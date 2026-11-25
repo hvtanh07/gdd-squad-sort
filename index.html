@@ -1040,8 +1040,10 @@ function view(l){
       t(`<b>Group on the floor.</b> Buddies that walk onto the Center Floor join the buddies of their color already there and move as one group from then on.`,
         `<b>Gom nhóm trên sân.</b> Buddy đi ra sân sẽ tự nhập với các buddy cùng màu đang ở đó và từ đó di chuyển theo nhóm.`),
       t(`<b>Split when full.</b> A group entering a container moves in only until the container is full. Extra buddies split off as a new group and stay on the Center Floor.`,
-        `<b>Tách nhóm khi đầy.</b> Nhóm đi vào container chỉ đi tới khi container đầy. Nếu dư, nhóm tách ra: một phần vào container tới khi đầy, phần còn lại ở lại sân.`)
-    ])+`<p class="note">${t('Example: 2 red in container A, 1 red on the Center Floor, container B has 2 free spaces with red at its opening. Tap A, then B: 2 reds leave A, the Center Floor red joins, B takes 2 and fills up, 1 red stays on the Center Floor.','Ví dụ: container A có 2 đỏ, sân có 1 đỏ, container B còn 2 chỗ và buddy gần cửa là đỏ. Chạm A rồi B: 2 đỏ rời A, nhập với 1 đỏ trên sân, B nhận 2 con là đầy, 1 đỏ ở lại sân.')}</p>`);
+        `<b>Tách nhóm khi đầy.</b> Nhóm đi vào container chỉ đi tới khi container đầy. Nếu dư, nhóm tách ra: một phần vào container tới khi đầy, phần còn lại ở lại sân.`),
+      t(`<b>Split between containers.</b> The same split rule applies when a group moves from one container to another: buddies enter the new container until it is full, and the extra buddies stay in the old container.`,
+        `<b>Tách nhóm giữa hai container.</b> Luật tách nhóm cũng áp dụng khi nhóm đi từ container này sang container khác: buddy vào container mới tới khi đầy, số dư ở lại container cũ.`)
+    ])+`<p class="note">${t('Example: 2 red in container A, 1 red on the Center Floor, container B has 2 free spaces with red at its opening. Tap A, then B: 2 reds leave A, the Center Floor red joins, B takes 2 and fills up, 1 red stays on the Center Floor.','Ví dụ: container A có 2 đỏ, sân có 1 đỏ, container B còn 2 chỗ và buddy gần cửa là đỏ. Chạm A rồi B: 2 đỏ rời A, nhập với 1 đỏ trên sân, B nhận 2 con là đầy, 1 đỏ ở lại sân.')}<br>${t('Example 2: 3 red at the front of container A, container B has 1 free space with red at its opening. Tap A, then B: 1 red moves into B and fills it, the other 2 reds stay in A.','Ví dụ 2: container A có 3 đỏ ở đầu, container B còn 1 chỗ và buddy gần cửa là đỏ. Chạm A rồi B: 1 đỏ vào B là đầy, 2 đỏ còn lại ở lại A.')}</p>`);
 
   /* FIXED: 1.3 is shared logic across projects. Keep it as it is and only change the numbers. */
 
@@ -1666,6 +1668,9 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('25 Nov 2026','25/11/2026'),
+      ent(t('Split between containers','Tách nhóm giữa hai container'),ul([
+        t(`Movement rules: a group moving container to container that does not fit splits; the rest stays in the old container.`,`Luật di chuyển: nhóm đi từ container sang container mà không vừa thì tách ra; phần dư ở lại container cũ.`)
+      ]))+
       ent(t('Naming','Đặt tên'),ul([
         t(`Renamed Plaza floor to Center Floor.`,`Đổi tên Plaza floor thành Center Floor.`)
       ]))+
