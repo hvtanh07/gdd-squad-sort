@@ -843,7 +843,7 @@ function tube(x,y,n){return `<rect class="trackfill" x="${x}" y="${y}" width="42
 function floorRow(x,y,n){let s='';for(let i=0;i<n;i++)s+=`<rect class="slot" x="${x+i*36}" y="${y}" width="34" height="34" rx="7"/>`;return s;}
 function boostBtn(x,y,g){return `<rect class="f3" x="${x}" y="${y}" width="36" height="36" rx="9"/><text class="qmark" x="${x+18}" y="${y+18}" dy=".35em">${g}</text>`;}
 function fieldSVG(label){
-  /* A: top containers (open at the bottom) · B: plaza floor tiles · C: bottom containers (open at the top) · D: buddies moving and waiting on the floor.
+  /* A: top containers (open at the bottom) · B: Center Floor tiles · C: bottom containers (open at the top) · D: buddies moving and waiting on the floor.
      Loop (HERO.tracks): the red pair leaves top container 1, walks across the floor into bottom container 2, the squad of 4 reds clears. */
   const topCols=[[7,4,0,0],[5,'?','?',2],[4,6,3,3],[2,'?',5,6]];
   const botCols=[[6,7,3,2],[0,0,1,1],[3,1,7,4]];
@@ -986,7 +986,7 @@ function view(l){
   const inf=t('Inferred, not seen in the videos.','Suy luận, chưa thấy trong video.');
   B['gameplay-overview']=
     ent(t('How it plays','Cách chơi'),ul([
-      t(`Each level has containers above and below a small plaza. Every container holds up to 4 buddies, mixed by color.`,
+      t(`Each level has containers above and below a small Center Floor. Every container holds up to 4 buddies, mixed by color.`,
         `Mỗi màn có các container ở phía trên và phía dưới một khoảng sân nhỏ. Mỗi container chứa tối đa 4 buddy, lẫn màu.`),
       t(`The player taps a container to pick its front buddies, then taps a floor tile to walk them out, or a container to send them in.`,
         `Người chơi chạm vào container để chọn các buddy ở đầu, rồi chạm ô sân để cho chúng đi ra, hoặc chạm container khác để đưa vào.`),
@@ -1013,14 +1013,14 @@ function view(l){
     ]))+
     ent(nm('Container','Container'),ul([
       t(`A glass tube that holds up to 4 buddies.`,`Ống kính chứa tối đa 4 buddy.`),
-      t(`Containers above the plaza open at the bottom. Containers below open at the top. The opening always faces the floor.`,
+      t(`Containers above the Center Floor open at the bottom. Containers below open at the top. The opening always faces the floor.`,
         `Container phía trên sân mở ở đáy. Container phía dưới mở ở đỉnh. Miệng luôn quay về phía sân.`),
       t(`Tap a container: its front group is selected and lifts slightly.`,`Chạm vào container: nhóm ở đầu được chọn và nhấc nhẹ lên.`),
       t(`With a group selected, tap another container to send the group in. See the movement rules below.`,
         `Khi đang chọn một nhóm, chạm container khác để đưa nhóm vào. Xem luật di chuyển bên dưới.`),
       t(`4 buddies of one color: party hats, confetti, then the container and squad clear.`,`Đủ 4 buddy cùng màu: đội mũ tiệc, pháo giấy, rồi container và squad biến mất.`)
     ]))+
-    ent(nm('Plaza floor','Sân'),ul([
+    ent(nm('Center Floor','Sân'),ul([
       t(`A grid of stone tiles between the top and bottom containers. Its shape changes per level: block, cross, T, L or wide band.`,
         `Lưới ô đá nằm giữa container trên và dưới. Hình dạng đổi theo màn: khối, chữ thập, chữ T, chữ L hoặc dải rộng.`),
       t(`Each tile holds one buddy. The floor is the only buffer, so its tile count sets the difficulty.`,
@@ -1033,15 +1033,15 @@ function view(l){
     ent(t('Movement rules','Luật di chuyển'),ol([
       t(`<b>Entry rule.</b> A group can enter a container only if the container is empty, or its buddy nearest the opening is the same color as the selected group.`,
         `<b>Điều kiện vào.</b> Nhóm chỉ đi vào một container nếu container đó trống, hoặc buddy gần cửa nhất cùng màu với nhóm được chọn.`),
-      t(`<b>Container to container.</b> Moving straight from one container to another works only when the plaza floor has free tiles for the group to walk through. Otherwise the player must clear tiles first.`,
+      t(`<b>Container to container.</b> Moving straight from one container to another works only when the Center Floor has free tiles for the group to walk through. Otherwise the player must clear tiles first.`,
         `<b>Từ container sang container.</b> Chỉ đi thẳng từ container này sang container khác được khi sân còn ô trống để nhóm đi qua. Nếu không, người chơi phải dọn bớt ô trước.`),
-      t(`<b>Pick up on the way.</b> When a group moves from one container to another, it also brings along the buddies of the same color waiting on the plaza into the chosen container.`,
+      t(`<b>Pick up on the way.</b> When a group moves from one container to another, it also brings along the buddies of the same color waiting on the Center Floor into the chosen container.`,
         `<b>Gom thêm trên đường.</b> Khi nhóm di chuyển từ container này sang container khác, nhóm dẫn theo cả các buddy cùng màu đang đứng trên sân vào container được chọn.`),
-      t(`<b>Group on the floor.</b> Buddies that walk onto the plaza floor join the buddies of their color already there and move as one group from then on.`,
+      t(`<b>Group on the floor.</b> Buddies that walk onto the Center Floor join the buddies of their color already there and move as one group from then on.`,
         `<b>Gom nhóm trên sân.</b> Buddy đi ra sân sẽ tự nhập với các buddy cùng màu đang ở đó và từ đó di chuyển theo nhóm.`),
-      t(`<b>Split when full.</b> A group entering a container moves in only until the container is full. Extra buddies split off as a new group and stay on the plaza.`,
+      t(`<b>Split when full.</b> A group entering a container moves in only until the container is full. Extra buddies split off as a new group and stay on the Center Floor.`,
         `<b>Tách nhóm khi đầy.</b> Nhóm đi vào container chỉ đi tới khi container đầy. Nếu dư, nhóm tách ra: một phần vào container tới khi đầy, phần còn lại ở lại sân.`)
-    ])+`<p class="note">${t('Example: 2 red in container A, 1 red on the plaza, container B has 2 free spaces with red at its opening. Tap A, then B: 2 reds leave A, the plaza red joins, B takes 2 and fills up, 1 red stays on the plaza.','Ví dụ: container A có 2 đỏ, sân có 1 đỏ, container B còn 2 chỗ và buddy gần cửa là đỏ. Chạm A rồi B: 2 đỏ rời A, nhập với 1 đỏ trên sân, B nhận 2 con là đầy, 1 đỏ ở lại sân.')}</p>`);
+    ])+`<p class="note">${t('Example: 2 red in container A, 1 red on the Center Floor, container B has 2 free spaces with red at its opening. Tap A, then B: 2 reds leave A, the Center Floor red joins, B takes 2 and fills up, 1 red stays on the Center Floor.','Ví dụ: container A có 2 đỏ, sân có 1 đỏ, container B còn 2 chỗ và buddy gần cửa là đỏ. Chạm A rồi B: 2 đỏ rời A, nhập với 1 đỏ trên sân, B nhận 2 con là đầy, 1 đỏ ở lại sân.')}</p>`);
 
   /* FIXED: 1.3 is shared logic across projects. Keep it as it is and only change the numbers. */
 
@@ -1236,7 +1236,7 @@ function view(l){
       `<b>${t('Fail-safe','Chống kẹt')}:</b> ${t('Not needed. Nothing counts down, so it cannot lock the board on its own.','Không cần. Không có gì đếm ngược nên nó không tự khóa bàn chơi.')} <a href="#lock-fail-safe">${t('See “Fail-safe”.','Xem mục “Cơ chế chống kẹt”.')}</a>`
     ]),unlock(10),demo('hiddenBuddy'))+
     ent(N.el2,ul([
-      t(`A colored house that sits in a container’s place, with its door on the side that faces the plaza. Buddies are locked inside.`,`Ngôi nhà có màu nằm ở vị trí của một container, cửa nằm ở phía quay ra sân. Bên trong nhốt các buddy.`),
+      t(`A colored house that sits in a container’s place, with its door on the side that faces the Center Floor. Buddies are locked inside.`,`Ngôi nhà có màu nằm ở vị trí của một container, cửa nằm ở phía quay ra sân. Bên trong nhốt các buddy.`),
       t(`While closed, it cannot be selected and no buddy can enter it. The buddies inside cannot be seen. `,`Khi còn đóng, không chọn được và không buddy nào đi vào được. Không thấy các buddy bên trong. `)+`<i>${inf}</i>`,
       t(`To open it, complete a squad of the house’s color: 4 buddies of that color in any container.`,`Để mở, hoàn thành một squad cùng màu với ngôi nhà: đủ 4 buddy màu đó trong bất kỳ container nào.`),
       t(`When the matching squad clears, the door opens and the house turns into a normal container with its buddies inside. The one nearest the opening wakes up and can be selected.`,`Khi squad cùng màu biến mất, cửa mở và ngôi nhà thành container thường với các buddy bên trong. Buddy gần cửa nhất thức dậy và chọn được.`),
@@ -1666,6 +1666,9 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('25 Nov 2026','25/11/2026'),
+      ent(t('Naming','Đặt tên'),ul([
+        t(`Renamed Plaza floor to Center Floor.`,`Đổi tên Plaza floor thành Center Floor.`)
+      ]))+
       ent(t('Remove logic','Logic Remove'),ul([
         t(`${P.bo3} now works by swap: pick a target container (the tapped buddy’s container, or one that already holds the color), swap other colors out for the chosen color, fill up to 4, then clear.`,`${P.bo3} giờ hoạt động bằng hoán đổi: chọn container đích (container của buddy được chạm, hoặc container đã có màu đó), đổi các màu khác lấy màu được chọn, lấp đầy cho đủ 4, rồi xóa.`),
         t(`Updated the demo, booster tutorial text, 3.4 animation, SFX and the revive rule.`,`Cập nhật demo, popup hướng dẫn, hiệu ứng 3.4, SFX và luật hồi sinh.`)
@@ -1675,7 +1678,7 @@ function view(l){
         t(`Updated 1.4, fail-safe, 2.3, unlock timeline, 3.3 and SFX.`,`Cập nhật 1.4, chống kẹt, 2.3, thứ tự mở khóa, 3.3 và SFX.`)
       ]))+
       ent(t('Movement rules','Luật di chuyển'),ul([
-        t(`Added 5 buddy movement rules to 1.2: entry rule, container to container needs free plaza tiles, pick up same-color buddies on the way, auto-group on the floor, split when the container is full.`,`Thêm 5 luật di chuyển của buddy vào 1.2: điều kiện vào, đi từ container sang container cần sân còn ô trống, gom thêm buddy cùng màu trên đường, tự gom nhóm trên sân, tách nhóm khi container đầy.`),
+        t(`Added 5 buddy movement rules to 1.2: entry rule, container to container needs free Center Floor tiles, pick up same-color buddies on the way, auto-group on the floor, split when the container is full.`,`Thêm 5 luật di chuyển của buddy vào 1.2: điều kiện vào, đi từ container sang container cần sân còn ô trống, gom thêm buddy cùng màu trên đường, tự gom nhóm trên sân, tách nhóm khi container đầy.`),
         t(`Lose condition in 1.1 now follows these rules.`,`Điều kiện thua ở 1.1 cập nhật theo các luật này.`)
       ]))+
       ent(t('Hero and overview','Hình đầu trang và tổng quan'),ul([
@@ -1696,7 +1699,7 @@ function view(l){
   /* PER GAME: one legend row per part of the play-screen sketch (A to E), matching the part-A … part-E groups in fieldSVG */
   const legend=[
     ['A',t('Top containers','Container phía trên'),t('Open at the bottom. Front buddy has a face; the rest sleep. “?” is a hidden buddy.','Mở ở đáy. Buddy đứng đầu có mặt; các con còn lại đang ngủ. “?” là buddy ẩn.')],
-    ['B',t('Plaza floor','Sân'),t('Tiles where buddies wait. Shape and size change per level.','Các ô để buddy đứng chờ. Hình dạng và kích thước đổi theo màn.')],
+    ['B',t('Center Floor','Sân'),t('Tiles where buddies wait. Shape and size change per level.','Các ô để buddy đứng chờ. Hình dạng và kích thước đổi theo màn.')],
     ['C',t('Bottom containers','Container phía dưới'),t('Open at the top, facing the floor.','Mở ở đỉnh, quay về phía sân.')],
     ['D',t('Buddies on the floor','Buddy trên sân'),t('Tap one to pick its color group and send it to a container.','Chạm một con để chọn nhóm cùng màu và đưa vào container.')]
   ];
@@ -1704,14 +1707,14 @@ function view(l){
     <div>
       <h1>${GAME}</h1>
       <p class="kind">${ui.sub}</p>
-      <p class="pitch">${t(`Tap containers to walk jelly buddies out onto the plaza and back in, until every buddy stands in a full squad of four of one color.`,
+      <p class="pitch">${t(`Tap containers to walk jelly buddies out onto the Center Floor and back in, until every buddy stands in a full squad of four of one color.`,
                            `Chạm container để đưa các buddy thạch ra sân rồi vào lại, cho tới khi mọi buddy đứng trong một squad đủ bốn con cùng màu.`)}</p>
       <ul class="legend">${legend.map(g=>`<li><button type="button" data-part="${g[0]}" aria-pressed="false"><span class="pinl" data-nosearch>${g[0]}</span><span><b>${g[1]}</b><span class="d">${g[2]}</span></span></button></li>`).join('')}</ul>
     </div>
     <figure class="field${paused?' paused':''}" id="field">
-      <div class="field-box">${fieldSVG(t('Animated sketch of a play screen: four containers on top, a tiled plaza in the middle, three containers below. Two red buddies walk from a top container across the plaza into a bottom container and the red squad clears.','Hình động màn chơi: bốn container ở trên, sân lát ô ở giữa, ba container ở dưới. Hai buddy đỏ đi từ container trên qua sân vào container dưới và squad đỏ biến mất.'))}</div>
+      <div class="field-box">${fieldSVG(t('Animated sketch of a play screen: four containers on top, a tiled Center Floor in the middle, three containers below. Two red buddies walk from a top container across the Center Floor into a bottom container and the red squad clears.','Hình động màn chơi: bốn container ở trên, sân lát ô ở giữa, ba container ở dưới. Hai buddy đỏ đi từ container trên qua sân vào container dưới và squad đỏ biến mất.'))}</div>
       <div class="field-foot"><button type="button" class="pause" id="pauseBtn">${paused?ui.play:ui.pause}</button></div>
-      <figcaption>${t(`Sketch based on level 10–13 layouts: a red pair walks out, crosses the plaza and completes a squad. Hover the legend to highlight each part.`,`Minh họa dựa trên bố cục màn 10–13: cặp buddy đỏ đi ra, băng qua sân và hoàn thành squad. Rê chuột vào chú thích để làm nổi bật từng phần.`)}</figcaption>
+      <figcaption>${t(`Sketch based on level 10–13 layouts: a red pair walks out, crosses the Center Floor and completes a squad. Hover the legend to highlight each part.`,`Minh họa dựa trên bố cục màn 10–13: cặp buddy đỏ đi ra, băng qua sân và hoàn thành squad. Rê chuột vào chú thích để làm nổi bật từng phần.`)}</figcaption>
     </figure>
   </div>`;
 
