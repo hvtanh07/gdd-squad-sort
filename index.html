@@ -984,7 +984,7 @@ function view(l){
     ]))+
     ent(t('Win and lose','Thắng và thua'),params([
       [t('Win','Thắng'),t(`Every buddy is in a full single-color squad. All containers clear.`,`Mọi buddy đều nằm trong squad 4 con cùng màu. Mọi container đã được dọn.`)],
-      [t('Lose','Thua'),t(`No legal move is left: the floor tiles are full and no container can take a group. `,`Không còn nước đi hợp lệ: sân đã kín ô và không container nào nhận được nhóm nào. `)+`<i>${inf}</i>`],
+      [t('Lose','Thua'),t(`No legal move is left: the floor tiles are full, so containers cannot pass groups to each other, and no container accepts a group from the floor (entry rule in 1.2). `,`Không còn nước đi hợp lệ: sân đã kín ô nên các container không chuyền nhóm cho nhau được, và không container nào nhận nhóm từ sân (điều kiện vào ở 1.2). `)+`<i>${inf}</i>`],
       [t('Limits','Giới hạn'),t(`No move counter and no timer in levels 1–13.`,`Màn 1–13 không có giới hạn move và không có đồng hồ.`)]
     ]));
 
@@ -1003,8 +1003,8 @@ function view(l){
       t(`Containers above the plaza open at the bottom. Containers below open at the top. The opening always faces the floor.`,
         `Container phía trên sân mở ở đáy. Container phía dưới mở ở đỉnh. Miệng luôn quay về phía sân.`),
       t(`Tap a container: its front group is selected and lifts slightly.`,`Chạm vào container: nhóm ở đầu được chọn và nhấc nhẹ lên.`),
-      t(`With a group selected, tap another container to send the group in. The target must be empty or show the same color at its front, and have room. `,
-        `Khi đang chọn một nhóm, chạm container khác để đưa nhóm vào. Container đích phải trống hoặc có buddy đầu cùng màu, và còn chỗ. `)+`<i>${inf}</i>`,
+      t(`With a group selected, tap another container to send the group in. See the movement rules below.`,
+        `Khi đang chọn một nhóm, chạm container khác để đưa nhóm vào. Xem luật di chuyển bên dưới.`),
       t(`4 buddies of one color: party hats, confetti, then the container and squad clear.`,`Đủ 4 buddy cùng màu: đội mũ tiệc, pháo giấy, rồi container và squad biến mất.`)
     ]))+
     ent(nm('Plaza floor','Sân'),ul([
@@ -1014,9 +1014,21 @@ function view(l){
         `Mỗi ô chứa một buddy. Sân là chỗ đệm duy nhất, nên số ô quyết định độ khó.`),
       t(`Tap a tile with a group selected: the buddies hop out and walk tile by tile to the nearest free tiles.`,
         `Chạm vào một ô khi đang chọn nhóm: các buddy nhảy ra và đi từng ô tới các ô trống gần nhất.`),
-      t(`Tap a buddy on the floor to select it with the buddies of its color around it, then tap a container.`,
-        `Chạm vào buddy trên sân để chọn nó cùng các buddy cùng màu bên cạnh, rồi chạm vào container.`)
-    ]));
+      t(`Buddies on the floor group up by color. Tap one buddy to select its whole color group, then tap a container.`,
+        `Buddy trên sân tự gom nhóm theo màu. Chạm một buddy để chọn cả nhóm cùng màu, rồi chạm vào container.`)
+    ]))+
+    ent(t('Movement rules','Luật di chuyển'),ol([
+      t(`<b>Entry rule.</b> A group can enter a container only if the container is empty, or its buddy nearest the opening is the same color as the selected group.`,
+        `<b>Điều kiện vào.</b> Nhóm chỉ đi vào một container nếu container đó trống, hoặc buddy gần cửa nhất cùng màu với nhóm được chọn.`),
+      t(`<b>Container to container.</b> Moving straight from one container to another works only when the plaza floor has free tiles for the group to walk through. Otherwise the player must clear tiles first.`,
+        `<b>Từ container sang container.</b> Chỉ đi thẳng từ container này sang container khác được khi sân còn ô trống để nhóm đi qua. Nếu không, người chơi phải dọn bớt ô trước.`),
+      t(`<b>Pick up on the way.</b> When a group moves from one container to another, it also brings along the buddies of the same color waiting on the plaza into the chosen container.`,
+        `<b>Gom thêm trên đường.</b> Khi nhóm di chuyển từ container này sang container khác, nhóm dẫn theo cả các buddy cùng màu đang đứng trên sân vào container được chọn.`),
+      t(`<b>Group on the floor.</b> Buddies that walk onto the plaza floor join the buddies of their color already there and move as one group from then on.`,
+        `<b>Gom nhóm trên sân.</b> Buddy đi ra sân sẽ tự nhập với các buddy cùng màu đang ở đó và từ đó di chuyển theo nhóm.`),
+      t(`<b>Split when full.</b> A group entering a container moves in only until the container is full. Extra buddies split off as a new group and stay on the plaza.`,
+        `<b>Tách nhóm khi đầy.</b> Nhóm đi vào container chỉ đi tới khi container đầy. Nếu dư, nhóm tách ra: một phần vào container tới khi đầy, phần còn lại ở lại sân.`)
+    ])+`<p class="note">${t('Example: 2 red in container A, 1 red on the plaza, container B has 2 free spaces with red at its opening. Tap A, then B: 2 reds leave A, the plaza red joins, B takes 2 and fills up, 1 red stays on the plaza.','Ví dụ: container A có 2 đỏ, sân có 1 đỏ, container B còn 2 chỗ và buddy gần cửa là đỏ. Chạm A rồi B: 2 đỏ rời A, nhập với 1 đỏ trên sân, B nhận 2 con là đầy, 1 đỏ ở lại sân.')}</p>`);
 
   /* FIXED: 1.3 is shared logic across projects. Keep it as it is and only change the numbers. */
 
@@ -1620,6 +1632,10 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('25 Nov 2026','25/11/2026'),
+      ent(t('Movement rules','Luật di chuyển'),ul([
+        t(`Added 5 buddy movement rules to 1.2: entry rule, container to container needs free plaza tiles, pick up same-color buddies on the way, auto-group on the floor, split when the container is full.`,`Thêm 5 luật di chuyển của buddy vào 1.2: điều kiện vào, đi từ container sang container cần sân còn ô trống, gom thêm buddy cùng màu trên đường, tự gom nhóm trên sân, tách nhóm khi container đầy.`),
+        t(`Lose condition in 1.1 now follows these rules.`,`Điều kiện thua ở 1.1 cập nhật theo các luật này.`)
+      ]))+
       ent(t('Hero and overview','Hình đầu trang và tổng quan'),ul([
         t(`The play-screen sketch now animates: a red pair walks into a bottom container and the squad clears. Pause stops it.`,`Hình màn chơi giờ có chuyển động: cặp buddy đỏ đi vào container dưới và squad biến mất. Nút Dừng sẽ dừng lại.`),
         t(`Removed the booster bar (part E) from the sketch and the “Early levels seen in the videos” table from 1.1.`,`Bỏ thanh công cụ (phần E) khỏi hình và bỏ bảng “Các màn đầu thấy trong video” ở mục 1.1.`)
