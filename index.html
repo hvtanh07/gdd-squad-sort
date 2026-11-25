@@ -796,6 +796,20 @@ const DEMOS={
       ...puffTracks(1.1),
       ['.new','opacity',[[0,0],[1.4,0],[1.7,1]]]
     ]},
+  house:{D:6.4, /* the last blue buddy walks in, the blue squad clears, the blue house opens and frees its buddies */
+    svg:()=>`<g class="hsq2">${tube(20,6,4)+bud(26,10,2,0)+bud(26,44,2,0)+bud(26,78,2,1)}</g>`+
+      `<g class="hin">${bud(26,112,2,1)}</g>`+
+      `<g class="hopen" style="opacity:0">${tube(120,6,4)+bud(126,10,5,0)+bud(126,44,1,0)+bud(126,78,7,0)+bud(126,112,1,1)}</g>`+
+      `<g class="hclosed"><rect class="f2" x="120" y="6" width="42" height="142" rx="8"/><rect class="lip" x="120" y="132" width="42" height="16" rx="4"/><rect x="132" y="120" width="18" height="28" rx="3" fill="#fff" opacity=".85"/><rect class="f2" x="135" y="124" width="12" height="24" rx="2"/></g>`+
+      floorRow(20,160,5)+puff(41,80)+puff(141,80),
+    tracks:()=>[
+      ['.hin','transform',[[0,T(64,48)],[.6,T(64,48)],[1.2,T(0,48)],[1.6,T(0,0)]]],
+      ['.hsq2','transform',[[1.8,T(0,0)],[2.0,T(0,-5)],[2.2,T(0,0)]]],
+      ['.hsq2','opacity',[[0,1],[2.4,1],[2.6,0]]],['.hin','opacity',[[0,1],[2.4,1],[2.6,0]]],
+      ['.hclosed','opacity',[[0,1],[3.0,1],[3.3,0]]],
+      ['.hopen','opacity',[[0,0],[3.0,0],[3.3,1]]],
+      ...puffTracks(2.4)
+    ]},
   removeSquad:{D:6, /* the player taps Remove, then a red buddy: all 4 red buddies run out, form a squad and clear */
     svg:()=>{
       const rs=[[20,10,0],[20,78,1],[76,10,0],[22,152,1]];
@@ -957,11 +971,11 @@ function view(l){
 
   /* names reused across sections: rename to the game's elements and boosters, add or remove keys as needed */
   const N={
-    el1:nm('Hidden buddy','Buddy ẩn'),
+    el1:nm('Hidden buddy','Buddy ẩn'),el2:nm('House','Ngôi nhà'),
     bo1:nm('Undo','Hoàn tác'),bo2:nm('Shuffle','Xáo trộn'),bo3:nm('Remove','Remove')
   };
   const P={ /* plain names for running text and tables */
-    el1:t('Hidden buddy','Buddy ẩn'),
+    el1:t('Hidden buddy','Buddy ẩn'),el2:t('House','Ngôi nhà'),
     bo1:t('Undo','Hoàn tác'),bo2:t('Shuffle','Xáo trộn'),bo3:t('Remove','Remove')
   };
   const withEl=t('With elements','Khi gặp yếu tố đặc biệt');
@@ -1199,6 +1213,7 @@ function view(l){
     hand:t('The player taps a box deep in a queue. It jumps to a slot and clears at once.','Người chơi chạm vào một hộp nằm sâu trong hàng chờ. Hộp nhảy lên ô và được dọn ngay.'),
     shuffle:t('The queues mix, and a box that matches the conveyor comes to the top.','Các hàng chờ được xáo lại, một hộp hợp màu với băng chuyền được đưa lên đầu.'),
     magnet:t('The player taps a box in a slot. It pulls in its matching items, clears and frees the slot.','Người chơi chạm vào một hộp trong ô. Hộp hút hết vật phẩm cùng màu, biến mất và nhường lại ô.'),
+    house:t('The last blue buddy walks in and the blue squad clears. The blue house opens and its buddies come out as a normal container.','Buddy xanh dương cuối cùng đi vào và squad xanh dương biến mất. Nhà xanh dương mở cửa, các buddy bên trong lộ ra như một container thường.'),
     hiddenBuddy:t('The red buddies walk out. The ? buddy is now in front and shows its color.','Hai buddy đỏ đi ra. Buddy ? giờ đứng đầu và hiện màu.'),
     undo:t('A buddy walks out. The player taps Undo and the move rewinds.','Một buddy đi ra. Người chơi chạm Hoàn tác và nước đi được tua lại.'),
     removeSquad:t('The player taps Remove, then a red buddy. All 4 red buddies run out, form a squad and clear.','Người chơi chạm Remove, rồi chạm một buddy đỏ. Cả 4 buddy đỏ chạy ra, đứng thành squad và biến mất.'),
@@ -1221,12 +1236,22 @@ function view(l){
       t(`From level 13, hidden buddies also sit in the middle of stacks, between colors.`,`Từ màn 13, buddy ẩn còn nằm giữa chồng, xen giữa các màu.`),
       `<b>${t('Fail-safe','Chống kẹt')}:</b> ${t('Not needed. Nothing counts down, so it cannot lock the board on its own.','Không cần. Không có gì đếm ngược nên nó không tự khóa bàn chơi.')} <a href="#lock-fail-safe">${t('See “Fail-safe”.','Xem mục “Cơ chế chống kẹt”.')}</a>`
     ]),unlock(10),demo('hiddenBuddy'))+
+    ent(N.el2,ul([
+      t(`A colored house that sits in a container’s place, with its door on the side that faces the plaza. Buddies are locked inside.`,`Ngôi nhà có màu nằm ở vị trí của một container, cửa nằm ở phía quay ra sân. Bên trong nhốt các buddy.`),
+      t(`While closed, it cannot be selected and no buddy can enter it. The buddies inside cannot be seen. `,`Khi còn đóng, không chọn được và không buddy nào đi vào được. Không thấy các buddy bên trong. `)+`<i>${inf}</i>`,
+      t(`To open it, complete a squad of the house’s color: 4 buddies of that color in any container.`,`Để mở, hoàn thành một squad cùng màu với ngôi nhà: đủ 4 buddy màu đó trong bất kỳ container nào.`),
+      t(`When the matching squad clears, the door opens and the house turns into a normal container with its buddies inside. The one nearest the opening wakes up and can be selected.`,`Khi squad cùng màu biến mất, cửa mở và ngôi nhà thành container thường với các buddy bên trong. Buddy gần cửa nhất thức dậy và chọn được.`),
+      t(`A level can have several houses of different colors. Seen in the popup: yellow, blue and pink.`,`Một màn có thể có nhiều nhà khác màu. Trong popup có nhà vàng, xanh dương và hồng.`),
+      t(`Buddies of the house’s own color are never locked inside it, so the house can always be opened. `,`Buddy cùng màu với ngôi nhà không bao giờ bị nhốt trong chính nó, nên nhà luôn mở được. `)+`<i>${inf}</i>`,
+      `<b>${t('Fail-safe','Chống kẹt')}:</b> ${t('the 4 buddies needed to open a house must never all be locked in other closed houses.','4 buddy cần để mở một nhà không bao giờ được bị nhốt hết trong các nhà khác đang đóng.')} <a href="#lock-fail-safe">${t('See “Fail-safe”.','Xem mục “Cơ chế chống kẹt”.')}</a>`
+    ]),unlock(20),demo('house'))+
     ent(nm('Fail-safe','Cơ chế chống kẹt'),ul([
-      t(`In levels 1–13 no element counts down on player actions. A level can only get stuck when the floor is full and no group fits any container.`,
-        `Ở màn 1–13 không có yếu tố nào đếm ngược theo thao tác. Màn chỉ bị kẹt khi sân kín và không nhóm nào vào được container nào.`),
+      t(`No element counts down on player actions. A level gets stuck when the floor is full and no group fits any container, or when houses block each other.`,
+        `Không có yếu tố nào đếm ngược theo thao tác. Màn bị kẹt khi sân kín và không nhóm nào vào được container nào, hoặc khi các ngôi nhà chặn lẫn nhau.`),
       t(`The game treats these cases as a stuck:`,`Trò chơi coi các trường hợp sau là bị kẹt:`)+ol([
         t('All floor tiles are taken and no container accepts a front group.','Sân kín ô và không container nào nhận nhóm đứng đầu.'),
-        t('Only hidden buddies are left at the front and no move can reveal them.','Chỉ còn buddy ẩn ở đầu và không nước nào làm chúng hiện ra.')
+        t('Only hidden buddies are left at the front and no move can reveal them.','Chỉ còn buddy ẩn ở đầu và không nước nào làm chúng hiện ra.'),
+        t(`A closed ${P.el2} needs a color whose buddies are locked in another closed ${P.el2}, so no house can open.`,`Một ${P.el2} đang đóng cần một màu mà buddy màu đó lại bị nhốt trong ${P.el2} khác cũng đang đóng, nên không nhà nào mở được.`)
       ]),
       t(`On a stuck, the revive offer shows (1.3). Level design must make sure every level is solvable without boosters. `,`Khi bị kẹt, hiện lựa chọn hồi sinh (1.3). Thiết kế màn phải đảm bảo mọi màn giải được mà không cần công cụ. `)+`<i>${inf}</i>`
     ])).replace('<div class="ent">','<div class="ent" id="lock-fail-safe">');
@@ -1311,7 +1336,8 @@ function view(l){
   B['element-tutorial']=table(t('Element tutorial','Hướng dẫn yếu tố đặc biệt'),
     [t('Element','Yếu tố'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn')],
     [
-      [N.el1,tbd,lvl(10)]
+      [N.el1,tbd,lvl(10)],
+      [N.el2,popup('Complete the matching color to open the house<br>and free the characters inside.','Hoàn thành màu tương ứng để mở nhà<br>và giải cứu các nhân vật bên trong.')+' '+t('(“House Unlocked!” popup showing a yellow, a blue and a pink house)','(popup “House Unlocked!” có nhà vàng, xanh dương và hồng)'),lvl(20)]
     ]);
 
   /* PER GAME: one row per booster */
@@ -1327,7 +1353,7 @@ function view(l){
   const stops=[
     [1,t('First tutorial','Hướng dẫn đầu tiên'),'ftue','ftue-steps','FTUE'],
     [5,P.bo1,'boost','booster-mechanics'],[10,P.el1,'elem','elements-mechanics'],
-    [11,P.bo2,'boost','booster-mechanics'],
+    [11,P.bo2,'boost','booster-mechanics'],[20,P.el2,'elem','elements-mechanics'],
     [t('TBD','Chưa chốt'),P.bo3,'boost','booster-mechanics']
   ];
   B['ftue--tutorial:after']=`<div class="glance">
@@ -1362,7 +1388,8 @@ function view(l){
 
   const an=t('Animation','Chuyển động'),look=t('Look','Hình ảnh');
   B['element-object-concept']=
-    ent(N.el1,params([[look,t('Dark grey stone cube with small “?” marks.','Khối đá xám đậm có các dấu “?” nhỏ.')],[an,t('The stone shell drops away and the colored buddy shows. Exact effect: TBD.','Lớp đá rơi ra và buddy có màu hiện ra. Hiệu ứng chính xác: Chưa chốt.')]]));
+    ent(N.el1,params([[look,t('Dark grey stone cube with small “?” marks.','Khối đá xám đậm có các dấu “?” nhỏ.')],[an,t('The stone shell drops away and the colored buddy shows. Exact effect: TBD.','Lớp đá rơi ra và buddy có màu hiện ra. Hiệu ứng chính xác: Chưa chốt.')]]))+
+    ent(N.el2,params([[look,t('A tall house in one buddy color, wooden plank walls, a small window at the top and a cream base with a door of the same color.','Ngôi nhà cao một màu buddy, tường ván gỗ, cửa sổ nhỏ phía trên và chân nhà màu kem có cửa cùng màu.')],[an,t('The matching squad clears, the door swings open with sparkles, the walls lift away and the buddies inside wake up. Exact effect: TBD.','Squad cùng màu biến mất, cửa bật mở kèm lấp lánh, tường nhà nhấc lên và các buddy bên trong thức dậy. Hiệu ứng chính xác: Chưa chốt.')]]));
 
   B['booster-object-concept']=
     ent(N.bo1,params([[look,t('Yellow curved arrow on a green button, red count badge.','Mũi tên cong màu vàng trên nút xanh lá, huy hiệu đếm màu đỏ.')],[an,t('Full-screen “◀◀ REW” tape rewind with chevrons; the last move plays backwards.','Hiệu ứng tua băng “◀◀ REW” toàn màn hình với các mũi tên; nước vừa đi chạy ngược lại.')]]))+
@@ -1385,6 +1412,7 @@ function view(l){
     ['Buddy Move','core',t('Buddies hop out and walk to tiles or into a container','Buddy nhảy ra và đi tới ô sân hoặc vào container'),1],
     ['Squad Complete','core',t('A container fills with 4 of one color and clears','Container đủ 4 buddy cùng màu và biến mất'),2],
     ['Hidden Reveal','el',t('A hidden buddy shows its color','Buddy ẩn hiện màu'),1],
+    ['House Open','el',t('A house opens after its matching squad clears','Ngôi nhà mở cửa sau khi squad cùng màu biến mất'),2],
     ['Undo','bo',t('Undo rewinds the last move (tape rewind sound)','Hoàn tác tua lại nước vừa đi (tiếng tua băng)'),1],
     ['Shuffle','bo',t('Shuffle mixes the buddies','Xáo trộn trộn lại các buddy'),2],
     ['Remove','bo',t('Remove: whistle, buddies run out and the squad clears','Remove: tiếng còi, buddy chạy ra và squad biến mất'),3]
@@ -1632,6 +1660,10 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('25 Nov 2026','25/11/2026'),
+      ent(t('House element','Yếu tố Ngôi nhà'),ul([
+        t(`Added ${P.el2} (unlocks at level 20): complete the matching color to open the house and free the buddies inside.`,`Thêm ${P.el2} (mở ở màn 20): hoàn thành màu tương ứng để mở nhà và giải cứu các buddy bên trong.`),
+        t(`Updated 1.4, fail-safe, 2.3, unlock timeline, 3.3 and SFX.`,`Cập nhật 1.4, chống kẹt, 2.3, thứ tự mở khóa, 3.3 và SFX.`)
+      ]))+
       ent(t('Movement rules','Luật di chuyển'),ul([
         t(`Added 5 buddy movement rules to 1.2: entry rule, container to container needs free plaza tiles, pick up same-color buddies on the way, auto-group on the floor, split when the container is full.`,`Thêm 5 luật di chuyển của buddy vào 1.2: điều kiện vào, đi từ container sang container cần sân còn ô trống, gom thêm buddy cùng màu trên đường, tự gom nhóm trên sân, tách nhóm khi container đầy.`),
         t(`Lose condition in 1.1 now follows these rules.`,`Điều kiện thua ở 1.1 cập nhật theo các luật này.`)
