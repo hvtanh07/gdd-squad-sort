@@ -810,23 +810,22 @@ const DEMOS={
       ['.hopen','opacity',[[0,0],[3.0,0],[3.3,1]]],
       ...puffTracks(2.4)
     ]},
-  removeSquad:{D:6, /* the player taps Remove, then a red buddy: all 4 red buddies run out, form a squad and clear */
-    svg:()=>{
-      const rs=[[20,10,0],[20,78,1],[76,10,0],[22,152,1]];
-      return tube(14,6,3)+tube(70,6,3)+bud(20,44,2,0)+bud(76,44,4,0)+bud(76,78,4,1)+floorRow(20,150,5)+
-        `<g class="rb">${boostBtn(150,14,'✕')}</g>`+
-        rs.map(([x,y,f],i)=>`<g class="r${i}">${bud(x,y,1,f)}</g>`).join('')+
-        tap(37,167)+puff(159,111);},
-    tracks:()=>{
-      const rs=[[20,10],[20,78],[76,10],[22,152]],to=[[128,80],[160,80],[128,112],[160,112]];
-      return [
-        ['.rb','transform',[[.3,'scale(1)'],[.5,'scale(1.08)'],[.7,'scale(1)']]],
-        ...tapTracks(1.0),
-        ...rs.flatMap(([x,y],i)=>[
-          [`.r${i}`,'transform',[[1.5+i*.1,T(0,0)],[2.4+i*.1,T(to[i][0]-x,to[i][1]-y)],[3.2,T(to[i][0]-x,to[i][1]-y)]]],
-          [`.r${i}`,'opacity',[[0,1],[3.2,1],[3.45,0]]]]),
-        ...puffTracks(3.1)
-      ];}}
+  removeSquad:{D:6.4, /* the player taps Remove, then the red front buddy: the other colors in its container swap with reds, the container fills with red and clears */
+    svg:()=>tube(14,6,4)+tube(114,6,4)+
+      `<g class="ra">${bud(20,44,1,0)+bud(20,112,1,1)}</g>`+
+      `<g class="sb1">${bud(20,10,2,0)}</g><g class="sy1">${bud(20,78,4,0)}</g>`+
+      `<g class="sr1">${bud(120,10,1,0)}</g><g class="sr2">${bud(120,78,1,1)}</g>`+bud(120,44,5,0)+bud(120,112,6,0)+
+      `<g class="rb">${boostBtn(132,156,'✕')}</g>`+floorRow(20,160,3)+
+      tap(35,127)+puff(35,76),
+    tracks:()=>[
+      ['.rb','transform',[[.3,'scale(1)'],[.5,'scale(1.08)'],[.7,'scale(1)']]],
+      ...tapTracks(1.0),
+      ['.sb1','transform',[[1.6,T(0,0)],[2.4,T(100,0)]]],['.sr1','transform',[[1.6,T(0,0)],[2.4,T(-100,0)]]],
+      ['.sy1','transform',[[1.8,T(0,0)],[2.6,T(100,0)]]],['.sr2','transform',[[1.8,T(0,0)],[2.6,T(-100,0)]]],
+      ['.ra','transform',[[2.8,T(0,0)],[3.0,T(0,-5)],[3.2,T(0,0)]]],
+      ['.ra','opacity',[[0,1],[3.4,1],[3.6,0]]],['.sr1','opacity',[[0,1],[3.4,1],[3.6,0]]],['.sr2','opacity',[[0,1],[3.4,1],[3.6,0]]],
+      ...puffTracks(3.4)
+    ]}
 };
 /* Squad Sort drawing helpers: a buddy is a jelly cube with a face (front, awake) or without (asleep, further back) */
 function bud(x,y,c,face,w,h){
@@ -1195,7 +1194,7 @@ function view(l){
       panel(t('On revive','Khi hồi sinh'),ul([
         t(`Continue from where it stopped. No restart, no life lost.`,`Chơi tiếp từ chỗ dừng. Không chơi lại, không mất tim.`),
         t(`A free ${P.bo3} is used at once.`,`Dùng ngay 1 ${P.bo3} miễn phí.`)+' '+
-          t(`It targets the color with the most buddies on the floor. Tie: the color with the most buried buddies (furthest from an opening).`,`Game tự chọn màu có nhiều buddy trên sân nhất. Nếu bằng nhau: màu có nhiều buddy nằm sâu nhất (xa miệng ống nhất).`),
+          t(`It picks the color with the most buddies on the floor (tie: the most buried buddies), then the container with the most buddies of that color, and runs the normal swap and fill.`,`Game chọn màu có nhiều buddy trên sân nhất (bằng nhau: màu có nhiều buddy nằm sâu nhất), rồi chọn container có nhiều buddy màu đó nhất, và chạy hoán đổi, lấp đầy như bình thường.`),
         t(`It is not taken from the inventory, and works even if ${P.bo3} is not owned or unlocked.`,`Không trừ vào kho, và vẫn dùng được dù chưa có hay chưa mở ${P.bo3}.`),
         t(`Revive count and price reset on a new attempt.`,`Số lần và giá hồi sinh tính lại khi bắt đầu lượt mới.`),
         t(`Ad or purchase fails: back to the popup. Input locked while the booster plays.`,`Quảng cáo hoặc giao dịch lỗi: quay lại popup. Khóa thao tác khi công cụ đang chạy.`)
@@ -1216,7 +1215,7 @@ function view(l){
     house:t('The last blue buddy walks in and the blue squad clears. The blue house opens and its buddies come out as a normal container.','Buddy xanh dương cuối cùng đi vào và squad xanh dương biến mất. Nhà xanh dương mở cửa, các buddy bên trong lộ ra như một container thường.'),
     hiddenBuddy:t('The red buddies walk out. The ? buddy is now in front and shows its color.','Hai buddy đỏ đi ra. Buddy ? giờ đứng đầu và hiện màu.'),
     undo:t('A buddy walks out. The player taps Undo and the move rewinds.','Một buddy đi ra. Người chơi chạm Hoàn tác và nước đi được tua lại.'),
-    removeSquad:t('The player taps Remove, then a red buddy. All 4 red buddies run out, form a squad and clear.','Người chơi chạm Remove, rồi chạm một buddy đỏ. Cả 4 buddy đỏ chạy ra, đứng thành squad và biến mất.'),
+    removeSquad:t('The player taps Remove, then the red front buddy. Blue and yellow in its container swap with reds from the other container, the container is full of red and clears.','Người chơi chạm Remove, rồi chạm buddy đỏ đứng đầu. Buddy xanh dương và vàng trong container đó đổi chỗ với buddy đỏ ở container kia, container đầy màu đỏ và biến mất.'),
     shuffleTubes:t('The player taps Shuffle and the buddies swap places between containers. Effect not seen yet, sketch only.','Người chơi chạm Xáo trộn và các buddy đổi chỗ giữa các container. Chưa thấy hiệu ứng thật, chỉ là minh họa.')
   };
   /* demo(key) shows DEMOS[key] with its DCAP caption; pass a caption as the second argument to override it */
@@ -1272,14 +1271,21 @@ function view(l){
       withEl+':'+ul([t(`${P.el1}: TBD.`,`${P.el1}: Chưa chốt.`)])
     ]),unlockB(11),demo('shuffleTubes'))+
     ent(N.bo3,ul([
-      t(`The strongest booster: it clears a whole squad of one color at once.`,`Công cụ mạnh nhất: xóa ngay cả một squad cùng màu.`),
-      t(`Tap Remove, then tap any visible buddy: a front buddy in a container or a buddy on the floor.`,`Chạm Remove, rồi chạm một buddy đang thấy được: buddy đứng đầu trong container hoặc buddy trên sân.`),
-      t(`All 4 buddies of that color, wherever they are, wake up and run out, even ones buried deep in a container.`,`Cả 4 buddy cùng màu đó, ở bất cứ đâu, đều thức dậy và chạy ra, kể cả con nằm sâu trong container.`),
-      t(`They form a squad on a free spot, put on party hats and clear. The floor tiles and container spaces they used are freed.`,`Chúng đứng thành squad ở chỗ trống, đội mũ tiệc và biến mất. Các ô sân và chỗ trong container chúng chiếm được trả lại.`),
-      t(`Buddies that were behind them become the new fronts, wake up and show their faces as usual.`,`Buddy đứng sau trở thành buddy đứng đầu mới, thức dậy và hiện mặt như luật thường.`),
+      t(`The strongest booster: it fills one container with a whole squad of one color and clears it at once.`,`Công cụ mạnh nhất: lấp đầy một container bằng cả squad một màu và xóa ngay.`),
+      t(`Tap Remove, then tap any visible buddy: a front buddy in a container or a buddy on the floor. Its color is the chosen color.`,`Chạm Remove, rồi chạm một buddy đang thấy được: buddy đứng đầu trong container hoặc buddy trên sân. Màu của nó là màu được chọn.`),
+      t(`The game picks the target container:`,`Game chọn container đích:`)+ol([
+        t(`If the tapped buddy stands in a container, that container.`,`Nếu buddy được chạm đang đứng trong container: chính container đó.`),
+        t(`If the tapped buddy is on the floor, a container that already holds the chosen color. Several such containers: the one with the most buddies of that color. `,`Nếu buddy được chạm đang ở trên sân: một container đã có sẵn màu được chọn. Có nhiều container như vậy: chọn container có nhiều buddy màu đó nhất. `)+`<i>${inf}</i>`,
+        t(`No container holds the chosen color: TBD.`,`Không container nào có màu được chọn: Chưa chốt.`)
+      ]),
+      t(`Swap: every buddy of another color in the target container swaps places with a buddy of the chosen color from elsewhere (another container or the floor).`,`Hoán đổi: mọi buddy khác màu trong container đích đổi chỗ với một buddy màu được chọn ở nơi khác (container khác hoặc trên sân).`),
+      t(`Fill: if the container still has empty spaces, more buddies of the chosen color are pulled in until it holds 4.`,`Lấp đầy: nếu container còn chỗ trống, game lấy thêm buddy màu được chọn vào cho tới khi đủ 4.`),
+      t(`Clear: the container is now full of the chosen color. The squad cheers and clears from the game.`,`Xóa: container giờ đầy màu được chọn. Squad ăn mừng và biến mất khỏi game.`),
+      t(`Buddies swapped out take the places the chosen-color buddies left. Any of them now nearest an opening wakes up as usual.`,`Buddy bị đổi ra đứng vào chỗ mà buddy màu được chọn vừa rời đi. Con nào giờ gần cửa nhất sẽ thức dậy như luật thường.`),
       t(`Cannot be used while a group is selected or a move is playing; tapping it again before picking a buddy cancels it.`,`Không dùng được khi đang chọn nhóm hoặc khi nước đi đang chạy; chạm lại nút trước khi chọn buddy để hủy.`),
       withEl+':'+ul([
-        t(`${P.el1}: cannot be tapped while hidden. If it is the called color, it is pulled out too, reveals and clears with the squad.`,`${P.el1}: không chạm được khi còn ẩn. Nếu nó đúng màu được gọi, nó cũng bị kéo ra, hiện màu rồi biến mất cùng squad.`)
+        t(`${P.el1}: cannot be tapped while hidden. A hidden buddy of the chosen color can be swapped in; it reveals and clears with the squad. A hidden buddy of another color in the target container is swapped out and stays hidden. `,`${P.el1}: không chạm được khi còn ẩn. Buddy ẩn đúng màu được chọn vẫn được đổi vào, hiện màu và biến mất cùng squad. Buddy ẩn khác màu trong container đích bị đổi ra và vẫn ẩn. `)+`<i>${inf}</i>`,
+        t(`${P.el2}: a closed house cannot be the target. Buddies inside a closed house are not swapped. `,`${P.el2}: nhà đang đóng không làm container đích được. Buddy bên trong nhà đang đóng không bị đổi. `)+`<i>${inf}</i>`
       ]),
       t(`Booster strength order: ${P.bo1} weak, ${P.bo2} medium, ${P.bo3} strong (remote config ids weak / medium / strong).`,`Thứ tự sức mạnh: ${P.bo1} yếu, ${P.bo2} vừa, ${P.bo3} mạnh (id trong cấu hình từ xa: weak / medium / strong).`)
     ]),[t('Unlock level TBD','Màn mở chưa chốt'),t(`3 free`,`Tặng 3 lượt`)],demo('removeSquad'));
@@ -1346,7 +1352,7 @@ function view(l){
     [
       [N.bo1,popup('Tap to undo<br>your last move','Chạm để hoàn tác<br>nước vừa đi')+' '+t('(after the first move; arrow and a “Free” tag on the button)','(sau nước đi đầu tiên; mũi tên và nhãn “Free” trên nút)'),lvl(5),lvl(3)],
       [N.bo2,tbd,lvl(11),lvl(3)],
-      [N.bo3,popup('Tap a buddy to remove<br>its whole squad!','Chạm một buddy để xóa<br>cả squad của nó!'),tbd,lvl(3)]
+      [N.bo3,popup('Tap a buddy to fill its container<br>with that color and clear it!','Chạm một buddy để lấp đầy container<br>bằng màu đó và xóa nó!'),tbd,lvl(3)]
     ]);
 
   /* PER GAME: every element and booster with its unlock level, sorted by level */
@@ -1394,7 +1400,7 @@ function view(l){
   B['booster-object-concept']=
     ent(N.bo1,params([[look,t('Yellow curved arrow on a green button, red count badge.','Mũi tên cong màu vàng trên nút xanh lá, huy hiệu đếm màu đỏ.')],[an,t('Full-screen “◀◀ REW” tape rewind with chevrons; the last move plays backwards.','Hiệu ứng tua băng “◀◀ REW” toàn màn hình với các mũi tên; nước vừa đi chạy ngược lại.')]]))+
     ent(N.bo2,params([[look,t('Purple and white tornado on a green button.','Lốc xoáy tím trắng trên nút xanh lá.')],[an,tbd]]))+
-    ent(N.bo3,params([[look,t('Green button with a remove (✕) icon, red count badge.','Nút xanh lá có biểu tượng xóa (✕), huy hiệu đếm màu đỏ.')],[an,t('The tapped buddy blows a whistle. Buddies of that color pop out of their containers, run tile by tile to one spot, cheer in party hats and dissolve in sparkles.','Buddy được chạm thổi còi. Các buddy cùng màu bật ra khỏi container, chạy từng ô về một chỗ, đội mũ tiệc ăn mừng rồi tan thành lấp lánh.')]]));
+    ent(N.bo3,params([[look,t('Green button with a remove (✕) icon, red count badge.','Nút xanh lá có biểu tượng xóa (✕), huy hiệu đếm màu đỏ.')],[an,t('The target container glows. Buddies of other colors and buddies of the chosen color swap places with a quick hop, extra chosen-color buddies jump in to fill it, then the squad cheers in party hats and dissolves in sparkles.','Container đích phát sáng. Buddy khác màu và buddy màu được chọn đổi chỗ bằng một cú nhảy nhanh, buddy màu được chọn nhảy thêm vào cho đầy, rồi squad đội mũ tiệc ăn mừng và tan thành lấp lánh.')]]));
 
   /* ===== 4. SFX & haptics ===== */
   /* FIXED: the UI rows are the same in every project. PER GAME: replace the core, element and booster rows.
@@ -1415,7 +1421,7 @@ function view(l){
     ['House Open','el',t('A house opens after its matching squad clears','Ngôi nhà mở cửa sau khi squad cùng màu biến mất'),2],
     ['Undo','bo',t('Undo rewinds the last move (tape rewind sound)','Hoàn tác tua lại nước vừa đi (tiếng tua băng)'),1],
     ['Shuffle','bo',t('Shuffle mixes the buddies','Xáo trộn trộn lại các buddy'),2],
-    ['Remove','bo',t('Remove: whistle, buddies run out and the squad clears','Remove: tiếng còi, buddy chạy ra và squad biến mất'),3]
+    ['Remove','bo',t('Remove: buddies swap, the container fills and the squad clears','Remove: buddy đổi chỗ, container được lấp đầy và squad biến mất'),3]
   ];
   B['sfx--haptics']=table(t('SFX and haptics','Âm thanh và rung'),
     [t('Name','Tên'),t('Category','Nhóm'),t('Plays when','Phát khi'),t('Haptic','Rung')],
@@ -1660,6 +1666,10 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('25 Nov 2026','25/11/2026'),
+      ent(t('Remove logic','Logic Remove'),ul([
+        t(`${P.bo3} now works by swap: pick a target container (the tapped buddy’s container, or one that already holds the color), swap other colors out for the chosen color, fill up to 4, then clear.`,`${P.bo3} giờ hoạt động bằng hoán đổi: chọn container đích (container của buddy được chạm, hoặc container đã có màu đó), đổi các màu khác lấy màu được chọn, lấp đầy cho đủ 4, rồi xóa.`),
+        t(`Updated the demo, booster tutorial text, 3.4 animation, SFX and the revive rule.`,`Cập nhật demo, popup hướng dẫn, hiệu ứng 3.4, SFX và luật hồi sinh.`)
+      ]))+
       ent(t('House element','Yếu tố Ngôi nhà'),ul([
         t(`Added ${P.el2} (unlocks at level 20): complete the matching color to open the house and free the buddies inside.`,`Thêm ${P.el2} (mở ở màn 20): hoàn thành màu tương ứng để mở nhà và giải cứu các buddy bên trong.`),
         t(`Updated 1.4, fail-safe, 2.3, unlock timeline, 3.3 and SFX.`,`Cập nhật 1.4, chống kẹt, 2.3, thứ tự mở khóa, 3.3 và SFX.`)
