@@ -884,7 +884,7 @@ const HERO={D:7,tracks:()=>[
 let heroAnims=[];
 function startHero(){
   heroAnims.forEach(a=>{try{a.cancel();}catch(e){}});heroAnims=[];
-  const fig=$('#field');if(!fig||!Element.prototype.animate||reduceMotion)return;
+  const fig=$('#field');if(!fig||!Element.prototype.animate)return;
   HERO.tracks().forEach(([sel,prop,frames])=>{
     fig.querySelectorAll(sel).forEach(el=>{try{heroAnims.push(el.animate(kfs(frames,prop,HERO.D),{duration:HERO.D*1000,iterations:Infinity}));}catch(e){}});
   });
@@ -1668,6 +1668,9 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('25 Nov 2026','25/11/2026'),
+      ent(t('Hero animation fix','Sửa hình động đầu trang'),ul([
+        t(`The play-screen animation now also runs when the device has Reduce Motion turned on, like the demos. Use Pause to stop it.`,`Hình động màn chơi giờ chạy cả khi thiết bị bật Giảm chuyển động, giống các demo. Dùng nút Dừng để dừng.`)
+      ]))+
       ent(t('Split between containers','Tách nhóm giữa hai container'),ul([
         t(`Movement rules: a group moving container to container that does not fit splits; the rest stays in the old container.`,`Luật di chuyển: nhóm đi từ container sang container mà không vừa thì tách ra; phần dư ở lại container cũ.`)
       ]))+
